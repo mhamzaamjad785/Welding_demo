@@ -1,47 +1,48 @@
+using Model;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using View;
 
-public class PileController : MonoBehaviour
+
+
+namespace Controller
 {
-    public List<Button> itemButtons;
-    
-    public void EnableFirstTaskTiles()
+
+    internal class PileController : MonoBehaviour
     {
-        DisableAllButtons();
-        itemButtons[0].interactable = true;
-        itemButtons[1].interactable = true;
-    }
-    public void EnableSecondTaskTiles()
-    {
-        DisableAllButtons();
-        itemButtons[2].interactable = true;
-        itemButtons[3].interactable = true;
-    }
 
-    public void EnableThirdTaskTiles()
-    {
-        DisableAllButtons();
-        itemButtons[4].interactable = true;
-        itemButtons[5].interactable = true;
-        itemButtons[6].interactable = true;
+        public List<Inventory> inventoryPrefabs;
+        [SerializeField] List<ItemButton> itemButtons;
+       
 
-    }
-
-
-
-
-
-
-
-
-    private void DisableAllButtons()
-    {
-        foreach (var button in itemButtons)
+        private void OnEnable()
         {
-            button.interactable = false;
+            for (int i = 0; i < inventoryPrefabs.Count; i++)
+            {
+                Inventory temp = inventoryPrefabs[i];
+                itemButtons[i].button.onClick.AddListener(
+                    () =>
+                    {
+                       
+                        temp.gameObject.SetActive(true);
+                        GameManager.instance.stopPlayerSelection = true;
+                        GameManager.instance.DisableAllPanel();
+                        GameManager.instance.selectedInventory = temp;
+                    }
+                    );
+            }
         }
-    }
+       
 
+
+        
+
+
+
+
+
+
+    }
 }

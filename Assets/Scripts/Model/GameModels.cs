@@ -1,11 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.ExceptionServices;
 using UnityEngine;
 using UnityEngine.UI;
 
 
 
-namespace View
+namespace Model
 {
    
 
@@ -20,6 +21,20 @@ namespace View
        Star,
        Pentagon
 
+    }
+
+    [System.Serializable]
+    internal struct WeldingPoints
+    {
+        public Transform startingPoint;
+        public Transform endingPoint;
+        public Transform[] weldingObjects;
+    }
+    internal enum Task_Type
+    {
+        First,
+        Second,
+        Third
     }
 
 }

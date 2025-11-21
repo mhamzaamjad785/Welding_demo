@@ -9,7 +9,7 @@ namespace Controller
     internal class InventoryController : MonoBehaviour
     {
         private List<Inventory> inventoryModels;      
-        UnityAction<Inventory> IAddNewItem;
+        
 
 
     }

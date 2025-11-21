@@ -8,36 +8,23 @@ namespace Model
     internal class Inventory : MonoBehaviour
     {
 
-        [SerializeField] private List<GameObject> weldingObjects;
-        
-        public Transform startingPoint;
-        public Transform endingPoint;
+      
+        public List<GameObject> parts;
+        public GameObject endResult;
+        public List<WeldingPoints> weldingPoints;
+       
         int totalWeldingObjects;
+        int weldingNumber = 0;
 
-
-        // Start is called before the first frame update
-        void Start()
-        {
-            totalWeldingObjects = weldingObjects.Count;
-        }
-
-        // Update is called once per frame
-        void Update()
+     
+        public void ApplyCollider()
         {
 
         }
 
-        public void UpdateWeldingObjects(float value)
-        {
-            int objectsEnabled = (int)(totalWeldingObjects * value);
-
-            for (int i = 0; i < objectsEnabled; i++)
-            {
-                weldingObjects[i].SetActive(true);
-            }
 
 
-        }
+      
 
         
 

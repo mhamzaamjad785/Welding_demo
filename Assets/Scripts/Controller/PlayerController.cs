@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using View;
+using static UnityEngine.GraphicsBuffer;
 
 namespace Controller
 {
@@ -17,7 +18,7 @@ namespace Controller
         float distanceOfRay =200;
         [SerializeField] GameObject ActionView;
         Coroutine actionCoroutine;
-
+        public Texture2D cursorTexture;
 
 
 
@@ -25,19 +26,19 @@ namespace Controller
         void Start()
         {
             characterController = GetComponent<CharacterController>();
-            Cursor.visible = true;
-            Cursor.lockState = CursorLockMode.None;
+           
             
         }
 
         // Update is called once per frame
         void Update()
         {
-            if(!ItemView.isPanelShow)
+            if(!ItemView.isPanelShow && !GameManager.instance.stopPlayerSelection)
             {
                 //  Movement();
                 Detection();
-                DoRotation();
+                if(Input.GetMouseButton(0))
+                    DoRotation();
             }
 
          
@@ -51,6 +52,7 @@ namespace Controller
         }
         private void DoRotation()
         {
+            
             target.transform.localPosition = new Vector3(
                 Mathf.Clamp(target.transform.localPosition.x + Input.GetAxis("Mouse X"), -4, 4),
                 Mathf.Clamp(target.transform.localPosition.y + Input.GetAxis("Mouse Y"), -5.7f, 5.7f),
@@ -65,8 +67,9 @@ namespace Controller
         {
 
             origin = Camera.main.transform.position;
-            direction = Camera.main.transform.forward;
-
+            //direction = Camera.main.transform.forward;
+            direction = (target.transform.position - Camera.main.transform.position).normalized;
+            raycastView.transform.position = Camera.main.WorldToScreenPoint(target.position);
             Ray ray = new Ray(origin, direction);
             if (Physics.Raycast(ray,out RaycastHit hitInfo, distanceOfRay))
             {
