@@ -17,6 +17,7 @@ public class WeldingController : MonoBehaviour
 
     public void UpdatePositions(Vector3 start, Vector3 end)
     {
+        transform.position = start;
         OnStartWeldAction?.Invoke();
         progress = 0;
         StartPosition = start;

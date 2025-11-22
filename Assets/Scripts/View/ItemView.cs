@@ -14,7 +14,7 @@ namespace View
 
         public static bool isPanelShow = false;
 
-        public UnityEvent ISelect, IDeselect, IPanelOpen, IPanelClose;
+        public UnityEvent  IPanelOpen, IPanelClose;
 
         public void OnEnablePanel()
         {

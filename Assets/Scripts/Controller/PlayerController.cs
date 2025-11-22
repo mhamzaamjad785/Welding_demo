@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using View;
-using static UnityEngine.GraphicsBuffer;
+
 
 namespace Controller
 {
@@ -13,12 +13,12 @@ namespace Controller
         [SerializeField]private float playerMovementSpeed=100;
         CharacterController characterController;
         [SerializeField]Transform target;
-        [SerializeField] Transform raycastView;
+       
         Vector3 origin, direction;
         float distanceOfRay =200;
-        [SerializeField] GameObject ActionView;
+        
         Coroutine actionCoroutine;
-        public Texture2D cursorTexture;
+       
 
 
 
@@ -35,29 +35,26 @@ namespace Controller
         {
             if(!ItemView.isPanelShow && !GameManager.instance.stopPlayerSelection)
             {
-                //  Movement();
+               
                 Detection();
-                if(Input.GetMouseButton(0))
+               
                     DoRotation();
             }
 
          
         }
-        private void Movement()
-        {
-            float horizontalMovement = transform.position.x + Input.GetAxis("Horizontal") * Time.deltaTime * playerMovementSpeed;
-            float verticalMovement = transform.position.z + Input.GetAxis("Vertical") * Time.deltaTime * playerMovementSpeed;
-            if (Input.GetAxis("Horizontal") !=0  || Input.GetAxis("Vertical") != 0)
-                characterController.Move(new Vector3(horizontalMovement, 0, verticalMovement));
-        }
+      
         private void DoRotation()
         {
             
-            target.transform.localPosition = new Vector3(
-                Mathf.Clamp(target.transform.localPosition.x + Input.GetAxis("Mouse X"), -4, 4),
-                Mathf.Clamp(target.transform.localPosition.y + Input.GetAxis("Mouse Y"), -5.7f, 5.7f),
-                target.transform.localPosition.z
-                );
+            target.transform.position = Camera.main.ScreenToWorldPoint(new Vector3(
+                Mathf.Clamp(Input.mousePosition.x, 0, Screen.width),
+                Mathf.Clamp(Input.mousePosition.y, 0, Screen.height),
+                Vector3.Distance(Camera.main.transform.position, target.transform.position)
+                ));
+
+
+           
         }
 
 
@@ -67,9 +64,9 @@ namespace Controller
         {
 
             origin = Camera.main.transform.position;
-            //direction = Camera.main.transform.forward;
+          
             direction = (target.transform.position - Camera.main.transform.position).normalized;
-            raycastView.transform.position = Camera.main.WorldToScreenPoint(target.position);
+           
             Ray ray = new Ray(origin, direction);
             if (Physics.Raycast(ray,out RaycastHit hitInfo, distanceOfRay))
             {
@@ -84,40 +81,24 @@ namespace Controller
              Debug.DrawRay(origin, direction * distanceOfRay, Color.red);
         }
 
-        private Vector3 RaycastDirection()
-        {
-            raycastView.transform.position = Camera.main.WorldToScreenPoint(target.position);
-            //targetPosition = Camera.main.transform.position + Vector3.forward * 100;
-            return target.position- Camera.main.transform.position  ;
-        }
+       
 
         private void CheckIfSelectedHasItemView(RaycastHit hitInfo)
         {
             if(hitInfo.collider.TryGetComponent<ItemView>(out ItemView itemView))
             {
                 ItemView.selectedItemView = itemView;
-                itemView.ISelect?.Invoke();
-                if(Input.GetKeyDown(KeyCode.A))
+               
+                if(Input.GetMouseButtonDown(0))
                 {
                     itemView.IPanelOpen?.Invoke();
                     
                 }
             }
-            else
-            {
-                if(ItemView.selectedItemView!=null)
-                {
-                    ItemView.selectedItemView.IDeselect?.Invoke();
-                   
-                }
-            }
+          
         }
 
-        public void ShowMessageItemView(string msg)
-        {
-            ActionView.SetActive(true);
-            ActionView.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = msg;
-        }
+      
         
 
 
